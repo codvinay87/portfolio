@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="paradiseGrad" x1="0" y1="0" x2="120" y2="120">
+      <stop offset="0%" stop-color="#00F5D4"/>
+      <stop offset="100%" stop-color="#A855F7"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="24" fill="#0A0E17"/>
+  <circle cx="60" cy="66" r="50" fill="none" stroke="url(#paradiseGrad)" stroke-width="2" stroke-dasharray="1 7" stroke-linecap="round" opacity="0.55"/>
+  <path d="M24,102 L24,58 A36,36 0 0 1 96,58 L96,102" fill="none" stroke="url(#paradiseGrad)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M40,70 L54,84 L84,48" fill="none" stroke="url(#paradiseGrad)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
