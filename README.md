@@ -7,10 +7,37 @@ No build step, no dependencies to install. It's one `index.html` file that loads
 ## Structure
 
 ```
-index.html                          → the entire site
+index.html                          → page shell, styles, and rendering logic
+content.json                        → every piece of copy on the site — edit this, not index.html
 assets/logo/paradise-logo-mark.svg          → logo, dark background version (use as avatar/favicon source)
 assets/logo/paradise-logo-transparent.svg   → logo, transparent version (letterhead, docs)
 ```
+
+## Editing content
+
+Everything visible on the page — hero copy, About text, case studies, tech stack, testimonials, pricing steps, and contact channels — lives in `content.json`. `index.html` fetches it on load and renders the page from it, so day-to-day changes never touch code.
+
+To add a new case study, copy an existing object inside the `caseStudies` array and edit the fields — the before/after slider and metric counters are generated automatically for however many entries are in the array. Same for `testimonials` and `techStack`.
+
+## Setting up "Book my free diagnosis"
+
+The contact modal offers three channels. Each one is off by default (showing a friendly fallback pointing to your email) until you fill in its field in `content.json`:
+
+**WhatsApp** — `contact.whatsapp.number`
+Your number in international format, digits only (e.g. `919812345678`). Get your number from WhatsApp → Settings.
+
+**Send a note (form → your email)** — `contact.form.endpoint`
+1. Go to [formspree.io](https://formspree.io), sign up free, create a new form
+2. Verify the destination email Formspree sends to
+3. Copy the endpoint it gives you (`https://formspree.io/f/xxxxxxx`) into `contact.form.endpoint`
+(Free tier covers 50 submissions/month — plenty for a portfolio.)
+
+**Book a call (Calendly + Google Meet)** — `contact.calendly.url`
+1. Create a free account at [calendly.com](https://calendly.com), create an event type (e.g. "15-Min Diagnosis Call")
+2. In that event type's **Location** setting, choose **Google Meet** — Calendly then generates and emails a Meet link automatically for every booking, no extra setup
+3. Copy the event's scheduling link into `contact.calendly.url`
+
+Also set `contact.email` to your real address — it's used in the footer and as the fallback shown for any channel you haven't connected yet.
 
 ## Branch strategy
 

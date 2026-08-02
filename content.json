@@ -1,0 +1,93 @@
+{
+  "brand": {
+    "name": "Paradise",
+    "tagline": "verified builds"
+  },
+  "hero": {
+    "eyebrow": "FULL-STACK ENGINEER · AI PRODUCTS",
+    "headlinePrefix": "Stop losing money on ",
+    "headlineAccent": "code that doesn't work.",
+    "sub": "I turn broken apps and raw ideas into fast, stable products you can actually ship.",
+    "ctaPrimary": "See the proof →",
+    "ctaSecondary": "Book a free diagnosis",
+    "microTrust": "Free 15-min call. No pitch — just a plan."
+  },
+  "trust": {
+    "rating": "4.9",
+    "projectsLine": "60+ shipped projects",
+    "techLogos": ["REACT", "NEXT.JS", "PYTHON", "FASTAPI", "OPENAI", "LANGCHAIN", "POSTGRESQL", "AWS", "DOCKER", "TYPESCRIPT"]
+  },
+  "about": {
+    "eyebrow": "WHY CLIENTS COME BACK",
+    "headline": "I've seen what \"almost done\" really looks like.",
+    "paragraphs": [
+      "Rage-quit MVPs. AI wrappers that hallucinate in production. Freelancers who vanished mid-sprint. I've rebuilt all of it — and I always tell you what's actually broken before you spend another dollar.",
+      "No jargon. No vanishing acts. Just a working product, and a paper trail so you always know what you're paying for."
+    ],
+    "chips": ["Fixed scope, fixed price", "Daily async updates", "You own 100% of the code"],
+    "terminalStats": [
+      { "key": "projects_rescued", "value": "28" },
+      { "key": "avg_response_time", "value": "\"< 4h\"" },
+      { "key": "client_ghosting", "value": "false" },
+      { "key": "code_ownership", "value": "\"100% yours\"" },
+      { "key": "status", "value": "\"ready to build\"" }
+    ]
+  },
+  "caseStudies": [
+    {
+      "tag": "CASE 01 · AI CUSTOMER SUPPORT",
+      "title": "The bot that kept lying to customers",
+      "problem": "Support bot hallucinated pricing, forgot context every message, escalations piling up.",
+      "solution": "Rebuilt on retrieval-grounded responses with function calling, guardrails, and human handoff.",
+      "result": "Shipped in 3 weeks. Escalations dropped, response time under 2 seconds.",
+      "metrics": [
+        { "value": "98", "suffix": "/100", "label": "Page Speed" },
+        { "value": "63", "suffix": "%", "label": "Faster Resolution" },
+        { "value": "41", "suffix": "%", "label": "Support Cost Cut" }
+      ]
+    },
+    {
+      "tag": "CASE 02 · SAAS DASHBOARD",
+      "title": "The app three freelancers couldn't finish",
+      "problem": "18 months, three developers, still no working billing flow. Users churning weekly.",
+      "solution": "Rebuilt the data layer, fixed race conditions, shipped Stripe billing end-to-end.",
+      "result": "Live in 5 weeks. Churn stabilized, first paying cohort renewed at full price.",
+      "metrics": [
+        { "value": "34", "suffix": "%", "label": "Revenue Growth" },
+        { "value": "72", "suffix": "%", "label": "30-Day Retention" },
+        { "value": "6", "suffix": "×", "label": "Faster Load Time" }
+      ]
+    }
+  ],
+  "techStack": [
+    { "group": "AI / LLM", "items": ["OpenAI API", "Anthropic Claude", "LangChain", "Pinecone / pgvector"] },
+    { "group": "Backend", "items": ["Node.js", "Python / FastAPI", "PostgreSQL", "Redis"] },
+    { "group": "Frontend", "items": ["React", "Next.js", "TypeScript", "Tailwind CSS"] },
+    { "group": "Infra", "items": ["Docker", "AWS", "Vercel", "GitHub Actions"] }
+  ],
+  "testimonials": [
+    { "quote": "Finally, someone who told me the truth about my own code instead of just billing hours.", "name": "[Client Name]", "role": "Founder", "company": "[Company]" },
+    { "quote": "Two developers before him couldn't finish it. He shipped in three weeks.", "name": "[Client Name]", "role": "Product Lead", "company": "[Company]" },
+    { "quote": "Worth every dollar — I finally trust the app I'm asking customers to pay for.", "name": "[Client Name]", "role": "CEO", "company": "[Company]" }
+  ],
+  "process": [
+    { "num": "01 — DIAGNOSIS", "title": "We talk it through", "desc": "I walk through your idea or your broken build with you — free, no pitch. Just an honest read on what it actually takes." },
+    { "num": "02 — ROADMAP", "title": "Full roadmap & sprint stories", "desc": "You get a complete roadmap broken into sprints and user stories — every feature mapped, before I write a single line of code." },
+    { "num": "03 — YOUR PRICE", "title": "You name the number", "desc": "Based on the effort laid out in the roadmap, you tell me what you're comfortable investing. Not the other way around." },
+    { "num": "04 — BUILD", "title": "I get to work", "desc": "Development starts against the roadmap you approved — with daily updates, so you always know where your money went." }
+  ],
+  "contact": {
+    "email": "REPLACE_WITH_YOUR_EMAIL@example.com",
+    "socials": "Upwork · GitHub · LinkedIn",
+    "whatsapp": {
+      "number": "REPLACE_WITH_WHATSAPP_NUMBER",
+      "prefilledMessage": "Hi! I found your portfolio and want to talk about a project."
+    },
+    "calendly": {
+      "url": "REPLACE_WITH_YOUR_CALENDLY_URL"
+    },
+    "form": {
+      "endpoint": "REPLACE_WITH_YOUR_FORMSPREE_ENDPOINT"
+    }
+  }
+}
