@@ -191,8 +191,7 @@
   .form-status{ margin-top:12px; font-size:12px; color:var(--text-dim); }
   .form-status.success{ color:var(--diff-green); }
   .form-status.error{ color:var(--diff-red); }
-  .calendly-embed{ min-height:520px; border-radius:calc(var(--radius) / 2); overflow:hidden; background:#ffffff; }
-  .calendly-embed iframe{ display:block; background:#ffffff; border-radius:calc(var(--radius) / 2); }
+  .calendly-embed{ min-height:520px; border-radius:calc(var(--radius) / 2); overflow:hidden; }
   .fallback-note{ border:1px dashed var(--border); border-radius:calc(var(--radius) / 2); padding:16px; font-size:13px; color:var(--text-dim); }
 
   @media (max-width: 860px){
@@ -348,8 +347,7 @@
       </div>
 
       <div class="tab-panel" data-panel="form">
-        <form id="contactForm" name="contact" data-netlify="true">
-          <input type="hidden" name="form-name" value="contact">
+        <form id="contactForm">
           <input class="field" type="text" name="name" placeholder="Your name" required>
           <input class="field" type="email" name="email" placeholder="Your email" required>
           <select class="field" name="projectType">
@@ -373,7 +371,6 @@
   </div>
 </div>
 
-<script src="./config.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
@@ -383,16 +380,22 @@
   var html = document.documentElement;
   var DATA = null;
 
-  // Load data from config.js (window.PORTFOLIO_CONFIG)
-  if(!window.PORTFOLIO_CONFIG){
-    document.querySelector('.hero-content').innerHTML =
-      '<p class="eyebrow mono">SETUP NEEDED</p><h1 class="display" style="font-size:2rem;">Could not load config.js</h1>' +
-      '<p class="sub">Make sure config.js is in the same folder as index.html and is being served correctly.</p>';
-  } else {
-    DATA = window.PORTFOLIO_CONFIG;
-    render(DATA);
-    afterRender();
-  }
+  fetch('./content.json')
+    .then(function(r){
+      if(!r.ok) throw new Error('content.json not found');
+      return r.json();
+    })
+    .then(function(data){
+      DATA = data;
+      render(data);
+      afterRender();
+    })
+    .catch(function(err){
+      console.error('Could not load content.json — is this being served over http(s)? Opening index.html directly (file://) blocks local fetches in most browsers. Run: python3 -m http.server', err);
+      document.querySelector('.hero-content').innerHTML =
+        '<p class="eyebrow mono">SETUP NEEDED</p><h1 class="display" style="font-size:2rem;">Could not load content.json</h1>' +
+        '<p class="sub">If you opened this file directly, your browser is blocking local data loading. Run a local server (e.g. <code>python3 -m http.server</code>) or view the deployed site instead.</p>';
+    });
 
   /* ---------- RENDER FROM JSON ---------- */
   function render(d){
@@ -440,7 +443,6 @@
               return '<div class="metric"><div class="num counter" data-target="'+m.value+'"><small>'+m.suffix+'</small></div><div class="label">'+m.label+'</div></div>';
             }).join('') +
           '</div>' +
-          (c.image ? '<img src="'+c.image+'" alt="'+c.title+' case study image" class="case-img">' : '') +
           '<div class="ba-slider">' +
             '<div class="ba-panel ba-before"><p class="tag mono">− BEFORE</p><div class="fake-ui"><div class="fake-bar" style="width:90%"></div><div class="fake-bar" style="width:60%"></div><div class="fake-bar" style="width:75%"></div></div></div>' +
             '<div class="ba-panel ba-after" id="afterPanel'+idx+'"><p class="tag mono">+ AFTER</p><div class="fake-ui"><div class="fake-bar" style="width:95%"></div><div class="fake-bar" style="width:80%"></div><div class="fake-bar" style="width:88%"></div></div></div>' +
@@ -468,7 +470,7 @@
 
     // footer
     document.getElementById('footerLine1').textContent = '© 2026 ' + d.brand.name + ' — Full-Stack & AI Engineering Studio';
-      document.getElementById('footerLine2').innerHTML = d.contact.socialLinks.map(function(l){ return '<a href="' + l.url + '" target="_blank" rel="noopener" class="social-link">' + l.name + '</a>'; }).join(' · ') + ' · ' + d.contact.email;
+    document.getElementById('footerLine2').textContent = d.contact.socials + ' · ' + d.contact.email;
   }
 
   /* ---------- EVERYTHING THAT NEEDS DOM CONTENT TO EXIST ---------- */
@@ -640,77 +642,38 @@
       updateWaLink();
     } else {
       document.querySelector('.tab-panel[data-panel="whatsapp"]').innerHTML =
-        '<div class="fallback-note">WhatsApp isn\'t set up yet — add your number to <code>contact.whatsapp.number</code> in config.js. In the meantime, email <strong>'+DATA.contact.email+'</strong>.</div>';
+        '<div class="fallback-note">WhatsApp isn\'t set up yet — add your number to <code>contact.whatsapp.number</code> in content.json. In the meantime, email <strong>'+DATA.contact.email+'</strong>.</div>';
     }
 
     // Contact form
     var form = document.getElementById('contactForm');
     var status = document.getElementById('formStatus');
     var endpoint = DATA.contact.form.endpoint;
-
-      // Netlify forms — no endpoint needed when deployed on Netlify
-      if(DATA.contact.form.useNetlifyForms){
-        // Detect local dev environment — Netlify forms only work on the deployed site
-        var isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '';
-        if(isLocalDev){
-          status.textContent = '\u26a0\ufe0f Running locally — form submissions only work on the deployed Netlify site. Test at paraddise.netlify.app or email ' + DATA.contact.email;
-          status.className = 'form-status mono';
-          form.querySelector('button[type=submit]').addEventListener('click', function(e){
-            e.preventDefault();
-            status.textContent = '\u26a0\ufe0f Form works on the deployed site only. Email: ' + DATA.contact.email;
-            status.className = 'form-status mono';
+    if(endpoint && endpoint.indexOf('REPLACE_WITH') === -1){
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        status.textContent = 'Sending…'; status.className = 'form-status mono';
+        fetch(endpoint, { method:'POST', headers:{ 'Accept':'application/json' }, body:new FormData(form) })
+          .then(function(r){
+            if(r.ok){ status.textContent = 'Sent — I\'ll reply within 4 hours.'; status.className = 'form-status mono success'; form.reset(); }
+            else { throw new Error('bad response'); }
+          })
+          .catch(function(){
+            status.textContent = 'Something went wrong — email me directly at ' + DATA.contact.email;
+            status.className = 'form-status mono error';
           });
-        } else {
-          form.addEventListener('submit', function(e){
-            e.preventDefault();
-            status.textContent = 'Sending\u2026'; status.className = 'form-status mono';
-            var formData = new FormData(form);
-            fetch('/', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-              body: new URLSearchParams(formData).toString()
-            })
-              .then(function(r){
-                if(r.ok){ status.textContent = 'Sent \u2014 I\'ll reply within 4 hours.'; status.className = 'form-status mono success'; form.reset(); }
-                else { throw new Error('bad response'); }
-              })
-              .catch(function(){
-                status.textContent = 'Something went wrong \u2014 email me directly at ' + DATA.contact.email;
-                status.className = 'form-status mono error';
-              });
-          });
-        }
-      } else if(endpoint && endpoint.indexOf('REPLACE_WITH') === -1){
-        form.addEventListener('submit', function(e){
-          e.preventDefault();
-          status.textContent = 'Sending…'; status.className = 'form-status mono';
-          fetch(endpoint, { method:'POST', headers:{ 'Accept':'application/json' }, body:new FormData(form) })
-            .then(function(r){
-              if(r.ok){ status.textContent = 'Sent — I\'ll reply within 4 hours.'; status.className = 'form-status mono success'; form.reset(); }
-              else { throw new Error('bad response'); }
-            })
-            .catch(function(){
-              status.textContent = 'Something went wrong — email me directly at ' + DATA.contact.email;
-              status.className = 'form-status mono error';
-            });
-        });
-      } else {
-        document.querySelector('.tab-panel[data-panel="form"]').innerHTML =
-          '<div class="fallback-note">The message form isn\'t connected yet — set <code>contact.form.useNetlifyForms = true</code> or add a Formspree endpoint in config.js. In the meantime, email <strong>'+DATA.contact.email+'</strong> directly.</div>';
-      }
+      });
+    } else {
+      document.querySelector('.tab-panel[data-panel="form"]').innerHTML =
+        '<div class="fallback-note">The message form isn\'t connected yet — add a Formspree (or Web3Forms) endpoint to <code>contact.form.endpoint</code> in content.json. In the meantime, email <strong>'+DATA.contact.email+'</strong> directly.</div>';
+    }
 
     // Calendly
     function initCalendly(){
-      var container = document.getElementById('calendlyEmbed');
-      // If a Google Calendar appointment URL is provided, embed it via iframe
-      if(DATA.contact.googleCalendarUrl && DATA.contact.googleCalendarUrl.indexOf('REPLACE_WITH')===-1){
-        container.innerHTML = '<iframe src="'+DATA.contact.googleCalendarUrl+'" style="border:0" width="100%" height="600" frameborder="0"></iframe>';
-        return;
-      }
-      // Fallback to Calendly as before
       var url = DATA.contact.calendly.url;
+      var container = document.getElementById('calendlyEmbed');
       if(!url || url.indexOf('REPLACE_WITH') !== -1){
-        container.innerHTML = '<div class="fallback-note">Google Calendar isn\'t connected yet — add your scheduling link to <code>contact.googleCalendarUrl</code> in config.js. In the meantime, email <strong>'+DATA.contact.email+'</strong> or use the other tabs.</div>';
+        container.innerHTML = '<div class="fallback-note">Calendly isn\'t connected yet — add your scheduling link to <code>contact.calendly.url</code> in content.json (and enable Google Meet as the location on that event type). In the meantime, email <strong>'+DATA.contact.email+'</strong> or use the other tabs.</div>';
         return;
       }
       container.innerHTML = '<div class="calendly-inline-widget" data-url="'+url+'" style="min-width:280px;height:520px;"></div>';

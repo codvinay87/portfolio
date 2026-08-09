@@ -1,6 +1,6 @@
 {
   "brand": {
-    "name": "Paradise",
+    "name": "Vakya",
     "tagline": "verified builds"
   },
   "hero": {
@@ -77,6 +77,52 @@
     { "num": "04 — BUILD", "title": "I get to work", "desc": "Development starts against the roadmap you approved — with daily updates, so you always know where your money went." }
   ],
   "contact": {
+    "email": "REPLACE_WITH_YOUR_EMAIL@example.com",
+    "socials": "Upwork · GitHub · LinkedIn",
+    "socialLinks": [
+      { "name": "LinkedIn", "url": "https://linkedin.com/in/yourprofile" },
+      { "name": "GitHub", "url": "https://github.com/yourprofile" }
+    ],
+    "whatsapp": {
+      "number": "REPLACE_WITH_WHATSAPP_NUMBER",
+      "prefilledMessage": "Hi! I found your portfolio and want to talk about a project."
+    },
+    "calendly": {
+      "url": "REPLACE_WITH_YOUR_CALENDLY_URL"
+    },
+    "googleCalendarUrl": "https://calendar.google.com/calendar/appointments/schedules/AcZssZ2Hnd1B3Eq77FrOUb8u-8QjIWXOPEENkIOFOKN4pCTXEuB4HikDucbL_wWPKtfAKfz7_xvIXupJ?gv=true",
+    "form": {
+      "endpoint": "REPLACE_WITH_YOUR_FORMSPREE_ENDPOINT"
+    }
+  },
+  "caseStudies": [
+    {
+      "tag": "CASE 01 · AI CUSTOMER SUPPORT",
+      "title": "The bot that kept lying to customers",
+      "problem": "Support bot hallucinated pricing, forgot context every message, escalations piling up.",
+      "solution": "Rebuilt on retrieval-grounded responses with function calling, guardrails, and human handoff.",
+      "result": "Shipped in 3 weeks. Escalations dropped, response time under 2 seconds.",
+      "metrics": [
+        { "value": "98", "suffix": "/100", "label": "Page Speed" },
+        { "value": "63", "suffix": "%", "label": "Faster Resolution" },
+        { "value": "41", "suffix": "%", "label": "Support Cost Cut" }
+      ],
+      "image": "assets/case-studies/01.jpg"
+    },
+    {
+      "tag": "CASE 02 · SAAS DASHBOARD",
+      "title": "The app three freelancers couldn't finish",
+      "problem": "18 months, three developers, still no working billing flow. Users churning weekly.",
+      "solution": "Rebuilt the data layer, fixed race conditions, shipped Stripe billing end-to-end.",
+      "result": "Live in 5 weeks. Churn stabilized, first paying cohort renewed at full price.",
+      "metrics": [
+        { "value": "34", "suffix": "%", "label": "Revenue Growth" },
+        { "value": "72", "suffix": "%", "label": "30-Day Retention" },
+        { "value": "6", "suffix": "×", "label": "Faster Load Time" }
+      ],
+      "image": "assets/case-studies/02.jpg"
+    }
+  ],
     "email": "REPLACE_WITH_YOUR_EMAIL@example.com",
     "socials": "Upwork · GitHub · LinkedIn",
     "whatsapp": {

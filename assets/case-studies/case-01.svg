@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad1" x1="0" y1="0" x2="800" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0A0E17"/>
+      <stop offset="100%" stop-color="#151B27"/>
+    </linearGradient>
+    <linearGradient id="accentGrad1" x1="0" y1="0" x2="800" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00F5D4"/>
+      <stop offset="100%" stop-color="#A855F7"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" rx="12" fill="url(#bgGrad1)" stroke="rgba(231,234,242,0.15)" stroke-width="2"/>
+  <!-- UI Header -->
+  <rect x="20" y="20" width="760" height="40" rx="8" fill="#10151F" stroke="rgba(231,234,242,0.1)"/>
+  <circle cx="44" cy="40" r="6" fill="#FF4B6E"/>
+  <circle cx="64" cy="40" r="6" fill="#F5C542"/>
+  <circle cx="84" cy="40" r="6" fill="#2EE6A6"/>
+  <text x="400" y="44" fill="#8A93A6" font-family="monospace" font-size="12" text-anchor="middle">ai-customer-support-architecture.log</text>
+
+  <!-- Content Grid -->
+  <rect x="40" y="80" width="340" height="330" rx="8" fill="#10151F" stroke="rgba(255,75,110,0.3)"/>
+  <text x="60" y="115" fill="#FF4B6E" font-family="monospace" font-size="14" font-weight="bold">− LEGACY BOT (Hallucinating)</text>
+  <rect x="60" y="140" width="300" height="40" rx="6" fill="rgba(255,75,110,0.1)"/>
+  <text x="75" y="165" fill="#E7EAF2" font-family="monospace" font-size="11">User: "What is your return policy?"</text>
+  <rect x="60" y="195" width="300" height="60" rx="6" fill="rgba(255,75,110,0.15)"/>
+  <text x="75" y="220" fill="#FF4B6E" font-family="monospace" font-size="11">Bot: "Returns are free forever!"</text>
+  <text x="75" y="240" fill="#FF4B6E" font-family="monospace" font-size="10">[!] Hallucinated 100% false policy</text>
+
+  <rect x="420" y="80" width="340" height="330" rx="8" fill="#10151F" stroke="rgba(46,230,166,0.3)"/>
+  <text x="440" y="115" fill="#2EE6A6" font-family="monospace" font-size="14" font-weight="bold">+ VAKYA REBUILD (Retrieval Grounded)</text>
+  <rect x="440" y="140" width="300" height="40" rx="6" fill="rgba(46,230,166,0.1)"/>
+  <text x="455" y="165" fill="#E7EAF2" font-family="monospace" font-size="11">User: "What is your return policy?"</text>
+  <rect x="440" y="195" width="300" height="80" rx="6" fill="rgba(46,230,166,0.15)"/>
+  <text x="455" y="220" fill="#2EE6A6" font-family="monospace" font-size="11">Bot: "30-day items in original packaging."</text>
+  <text x="455" y="240" fill="#00F5D4" font-family="monospace" font-size="10">✓ Verified against Pinecone Vector DB</text>
+  <text x="455" y="260" fill="#2EE6A6" font-family="monospace" font-size="10">Latency: 1.4s · Accuracy: 99.4%</text>
+
+  <rect x="440" y="300" width="300" height="80" rx="6" fill="url(#accentGrad1)" opacity="0.15"/>
+  <text x="590" y="345" fill="#00F5D4" font-family="monospace" font-size="13" font-weight="bold" text-anchor="middle">Resolution Time −63% · PageSpeed 98/100</text>
+</svg>
