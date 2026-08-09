@@ -1,627 +1,1555 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Paradise — Full-Stack & AI Engineering Studio</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='24' fill='%230A0E17'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='120' y2='120'%3E%3Cstop offset='0%25' stop-color='%2300F5D4'/%3E%3Cstop offset='100%25' stop-color='%23A855F7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M24,102 L24,58 A36,36 0 0 1 96,58 L96,102' fill='none' stroke='url(%23g)' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M40,70 L54,84 L84,48' fill='none' stroke='url(%23g)' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root[data-theme="terminal"]{
-    --bg:#0A0E17; --bg-alt:#10151F; --bg-raised:#151B27;
-    --text:#E7EAF2; --text-dim:#8A93A6;
-    --accent:#00F5D4; --accent-2:#A855F7;
-    --diff-red:#FF4B6E; --diff-green:#2EE6A6;
-    --border: rgba(231,234,242,0.12);
-    --radius: 10px;
-    --shadow: 0 0 40px rgba(0,245,212,0.08);
-    --cursor-mix: screen;
-  }
-  :root[data-theme="blueprint"]{
-    --bg:#EDEFF3; --bg-alt:#FFFFFF; --bg-raised:#FFFFFF;
-    --text:#0B0E14; --text-dim:#4A5568;
-    --accent:#1A56FF; --accent-2:#7C3AED;
-    --diff-red:#D6304A; --diff-green:#0E9F6E;
-    --border: #0B0E14;
-    --radius: 0px;
-    --shadow: none;
-    --cursor-mix: normal;
-  }
-  *{ margin:0; padding:0; box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
-  body{
-    background:var(--bg); color:var(--text);
-    font-family:'IBM Plex Sans', sans-serif;
-    overflow-x:hidden;
-    transition: background .5s ease, color .5s ease;
-  }
-  ::selection{ background:var(--accent); color:var(--bg); }
-  a{ color:inherit; text-decoration:none; }
-  .mono{ font-family:'IBM Plex Mono', monospace; }
-  .display{ font-family:'Space Grotesk', sans-serif; }
-  img,button{ -webkit-tap-highlight-color: transparent; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paradise — Full-Stack & AI Engineering Studio</title>
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='24' fill='%230A0E17'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='120' y2='120'%3E%3Cstop offset='0%25' stop-color='%2300F5D4'/%3E%3Cstop offset='100%25' stop-color='%23A855F7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M24,102 L24,58 A36,36 0 0 1 96,58 L96,102' fill='none' stroke='url(%23g)' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M40,70 L54,84 L84,48' fill='none' stroke='url(%23g)' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root[data-theme="terminal"] {
+      --bg: #0A0E17;
+      --bg-alt: #10151F;
+      --bg-raised: #151B27;
+      --text: #E7EAF2;
+      --text-dim: #8A93A6;
+      --accent: #00F5D4;
+      --accent-2: #A855F7;
+      --diff-red: #FF4B6E;
+      --diff-green: #2EE6A6;
+      --border: rgba(231, 234, 242, 0.12);
+      --radius: 10px;
+      --shadow: 0 0 40px rgba(0, 245, 212, 0.08);
+    }
 
-  /* ---------- custom cursor ---------- */
-  .cursor-dot, .cursor-ring{
-    position:fixed; top:0; left:0; pointer-events:none; z-index:9999;
-    transform:translate(-50%,-50%);
-  }
-  .cursor-dot{
-    width:6px; height:6px; border-radius:50%; background:var(--accent);
-  }
-  .cursor-ring{
-    width:26px; height:26px; border-radius:50%;
-    border:1px solid var(--accent);
-    transition: width .18s ease, height .18s ease, border-color .18s ease, opacity .18s ease;
-  }
-  .cursor-ring.hover{ width:52px; height:52px; border-color:var(--accent-2); }
-  .cursor-ring::after{
-    content:'▌'; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--accent);
-    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-    opacity:0; transition:opacity .18s ease;
-  }
-  .cursor-ring.hover::after{ opacity:1; }
-  @media (hover:none){ .cursor-dot,.cursor-ring{ display:none; } }
-  body.reduced-motion .cursor-dot, body.reduced-motion .cursor-ring{ display:none; }
+    :root[data-theme="blueprint"] {
+      --bg: #EDEFF3;
+      --bg-alt: #FFFFFF;
+      --bg-raised: #FFFFFF;
+      --text: #0B0E14;
+      --text-dim: #4A5568;
+      --accent: #1A56FF;
+      --accent-2: #7C3AED;
+      --diff-red: #D6304A;
+      --diff-green: #0E9F6E;
+      --border: #0B0E14;
+      --radius: 0px;
+      --shadow: none;
+    }
 
-  /* ---------- brand ---------- */
-  .brand{
-    position:fixed; top:22px; left:24px; z-index:1000;
-    display:flex; align-items:center; gap:10px;
-  }
-  .brand-mark{ width:34px; height:34px; flex-shrink:0; }
-  .brand-word{ display:block; font-size:16px; font-weight:600; letter-spacing:.01em; line-height:1.15; }
-  .brand-tag{ display:block; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-dim); }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  /* ---------- theme toggle ---------- */
-  .theme-toggle{
-    position:fixed; top:24px; right:24px; z-index:1000;
-    display:flex; align-items:center; gap:8px;
-    padding:8px 14px; border:1px solid var(--border); border-radius:var(--radius);
-    background:var(--bg-alt); cursor:pointer;
-    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em;
-    color:var(--text-dim);
-  }
-  .theme-toggle span.active{ color:var(--accent); }
-  .theme-toggle .switch{
-    width:32px; height:16px; border-radius:8px; background:var(--border); position:relative;
-  }
-  .theme-toggle .switch::after{
-    content:''; position:absolute; top:2px; left:2px; width:12px; height:12px; border-radius:50%;
-    background:var(--accent); transition:transform .3s ease;
-  }
-  [data-theme="blueprint"] .theme-toggle .switch::after{ transform:translateX(16px); }
+    html {
+      scroll-behavior: smooth;
+    }
 
-  section{ position:relative; padding:120px 8vw; }
-  .eyebrow{
-    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em;
-    color:var(--accent); text-transform:uppercase; margin-bottom:16px;
-    display:flex; align-items:center; gap:8px;
-  }
-  .eyebrow::before{ content:'//'; color:var(--text-dim); }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      overflow-x: hidden;
+      transition: background .5s ease, color .5s ease;
+    }
 
-  /* ---------- hero ---------- */
-  .hero{
-    min-height:100vh; display:flex; flex-direction:column; justify-content:center;
-    padding:0 8vw; position:relative;
-  }
-  #hero-canvas{ position:absolute; inset:0; width:100%; height:100%; opacity:.55; }
-  .hero-content{ position:relative; z-index:2; max-width:900px; }
-  .hero h1{
-    font-size:clamp(2.6rem, 6vw, 5.2rem); line-height:1.05; font-weight:700;
-    letter-spacing:-.02em; margin-bottom:24px;
-  }
-  .hero h1 .accent{ color:var(--accent); }
-  .hero p.sub{
-    font-size:clamp(1.05rem,1.6vw,1.3rem); color:var(--text-dim); max-width:560px; margin-bottom:40px;
-  }
-  .cta-row{ display:flex; gap:16px; flex-wrap:wrap; align-items:center; }
-  .btn{
-    font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.04em;
-    padding:16px 28px; border-radius:var(--radius); cursor:pointer; border:1px solid transparent;
-    display:inline-flex; align-items:center; gap:10px;
-  }
-  .btn-primary{ background:var(--accent); color:var(--bg); font-weight:600; }
-  .btn-ghost{ border-color:var(--border); color:var(--text); }
-  .micro-trust{ margin-top:20px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-dim); }
-  .scroll-cue{
-    position:absolute; bottom:40px; left:8vw; font-family:'IBM Plex Mono',monospace;
-    font-size:12px; color:var(--text-dim); display:flex; align-items:center; gap:8px;
-  }
-  .blink{ animation:blink 1s steps(1) infinite; color:var(--accent); }
-  @keyframes blink{ 50%{ opacity:0; } }
+    ::selection {
+      background: var(--accent);
+      color: var(--bg);
+    }
 
-  /* ---------- trust marquee ---------- */
-  .trust-bar{ padding:28px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); overflow:hidden; }
-  .trust-bar .rating{
-    text-align:center; font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--text-dim); margin-bottom:18px;
-  }
-  .trust-bar .rating .stars{ color:var(--accent); }
-  .marquee{ display:flex; width:200%; animation:scroll 26s linear infinite; }
-  .marquee:hover{ animation-play-state:paused; }
-  .marquee span{
-    font-family:'IBM Plex Mono',monospace; font-size:14px; color:var(--text-dim);
-    padding:0 40px; white-space:nowrap;
-  }
-  @keyframes scroll{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-  /* ---------- about ---------- */
-  .about{ display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
-  .about h2{ font-size:clamp(1.8rem,3vw,2.6rem); margin-bottom:24px; line-height:1.15; }
-  .about p{ color:var(--text-dim); margin-bottom:18px; max-width:520px; line-height:1.65; }
-  .chip-row{ display:flex; gap:12px; flex-wrap:wrap; margin-top:28px; }
-  .chip{
-    font-family:'IBM Plex Mono',monospace; font-size:12px; padding:9px 14px;
-    border:1px solid var(--border); border-radius:100px; color:var(--text-dim);
-  }
-  .terminal-window{
-    background:var(--bg-alt); border:1px solid var(--border); border-radius:var(--radius);
-    box-shadow:var(--shadow); overflow:hidden;
-  }
-  .terminal-header{
-    display:flex; gap:8px; padding:14px 16px; border-bottom:1px solid var(--border);
-    align-items:center;
-  }
-  .dot{ width:10px; height:10px; border-radius:50%; }
-  .dot.r{ background:var(--diff-red); } .dot.y{ background:#F5C542; } .dot.g{ background:var(--diff-green); }
-  .terminal-header span{ margin-left:auto; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-dim); }
-  .terminal-body{ padding:24px; font-family:'IBM Plex Mono',monospace; font-size:13px; line-height:2; color:var(--text-dim); }
-  .terminal-body .line-num{ color:var(--border); margin-right:14px; }
-  .terminal-body .val{ color:var(--accent); }
+    .mono {
+      font-family: 'IBM Plex Mono', monospace;
+    }
 
-  /* ---------- case studies ---------- */
-  .case{ border-top:1px solid var(--border); padding-top:80px; margin-top:80px; }
-  .case-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:48px; flex-wrap:wrap; gap:16px; }
-  .case-tag{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-dim); }
-  .case h3{ font-size:clamp(1.6rem,2.6vw,2.2rem); margin-top:6px; max-width:640px; }
-  .psr{ display:grid; gap:14px; margin-bottom:40px; max-width:640px; }
-  .psr-line{ display:flex; gap:14px; font-size:15px; line-height:1.6; }
-  .psr-line .mark{ font-family:'IBM Plex Mono',monospace; font-weight:600; flex-shrink:0; }
-  .psr-line.problem .mark{ color:var(--diff-red); }
-  .psr-line.solution .mark{ color:var(--accent-2); }
-  .psr-line.result .mark{ color:var(--diff-green); }
-  .metrics-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:48px; max-width:640px; }
-  .metric{ border:1px solid var(--border); border-radius:var(--radius); padding:20px; }
-  .metric .num{ font-family:'Space Grotesk',sans-serif; font-size:2rem; font-weight:700; color:var(--accent); }
-  .metric .num small{ font-size:1rem; color:var(--text-dim); }
-  .metric .label{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-dim); margin-top:6px; text-transform:uppercase; letter-spacing:.06em; }
+    .display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
 
-  /* before/after slider */
-  .ba-slider{ position:relative; width:100%; aspect-ratio:16/8; border-radius:var(--radius); overflow:hidden; border:1px solid var(--border); }
-  .ba-panel{ position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:32px; }
-  .ba-before{ background:
-      repeating-linear-gradient(135deg, rgba(255,75,110,.12) 0 2px, transparent 2px 14px), var(--bg-alt); }
-  .ba-after{ background:
-      repeating-linear-gradient(135deg, rgba(46,230,166,.10) 0 2px, transparent 2px 14px), var(--bg-alt);
-      clip-path: inset(0 0 0 50%); }
-  .ba-panel .tag{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; margin-bottom:10px; }
-  .ba-before .tag{ color:var(--diff-red); } .ba-after .tag{ color:var(--diff-green); }
-  .ba-panel .fake-ui{ display:flex; flex-direction:column; gap:10px; max-width:280px; }
-  .fake-bar{ height:10px; border-radius:4px; background:var(--border); }
-  .ba-before .fake-bar{ background:rgba(255,75,110,.25); }
-  .ba-after .fake-bar{ background:rgba(46,230,166,.28); }
-  .ba-handle{
-    position:absolute; top:0; bottom:0; left:50%; width:2px; background:var(--accent);
-    cursor:ew-resize; z-index:5;
-  }
-  .ba-handle::after{
-    content:'⇔'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-    width:34px; height:34px; border-radius:50%; background:var(--accent); color:var(--bg);
-    display:flex; align-items:center; justify-content:center; font-size:14px;
-  }
-  .ba-range{ position:absolute; inset:0; width:100%; opacity:0; cursor:ew-resize; z-index:6; }
+    img,
+    button {
+      -webkit-tap-highlight-color: transparent;
+      font-family: inherit;
+    }
 
-  /* ---------- tech stack ---------- */
-  .stack-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); margin-top:40px; }
-  .stack-group{ background:var(--bg); padding:24px; }
-  .stack-group h4{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--accent); text-transform:uppercase; letter-spacing:.08em; margin-bottom:14px; }
-  .stack-group ul{ list-style:none; display:flex; flex-direction:column; gap:8px; }
-  .stack-group li{ font-size:14px; color:var(--text-dim); }
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: inherit;
+    }
 
-  /* ---------- testimonials ---------- */
-  .test-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:48px; }
-  .test-card{ border:1px solid var(--border); border-radius:var(--radius); padding:28px; background:var(--bg-alt); }
-  .test-card .stars{ color:var(--accent); font-size:13px; margin-bottom:16px; }
-  .test-card p{ font-size:15px; line-height:1.6; margin-bottom:20px; color:var(--text); }
-  .test-card .who{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-dim); }
+    /* ---------- custom cursor ---------- */
+    .cursor-dot,
+    .cursor-ring {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
 
-  /* ---------- final cta ---------- */
-  .final-cta{ text-align:center; padding:160px 8vw; }
-  .final-cta h2{ font-size:clamp(2rem,4.4vw,3.4rem); max-width:800px; margin:0 auto 20px; line-height:1.15; }
-  .final-cta p{ color:var(--text-dim); margin-bottom:36px; }
+    .cursor-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
 
-  footer{ padding:40px 8vw; border-top:1px solid var(--border); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-dim); }
+    .cursor-ring {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--accent);
+      transition: width .18s ease, height .18s ease, border-color .18s ease, opacity .18s ease;
+    }
 
-  .reveal{ opacity:0; transform:translateY(28px); }
+    .cursor-ring.hover {
+      width: 52px;
+      height: 52px;
+      border-color: var(--accent-2);
+    }
 
-  @media (max-width: 860px){
-    .about{ grid-template-columns:1fr; }
-    .metrics-row{ grid-template-columns:1fr 1fr; }
-    .test-grid{ grid-template-columns:1fr; }
-    .process-grid{ grid-template-columns:1fr 1fr; }
-    section{ padding:80px 6vw; }
-  }
-  @media (max-width: 520px){
-    .brand-tag{ display:none; }
-    .theme-toggle > span:not(.switch){ display:none; }
-    .process-grid{ grid-template-columns:1fr; }
-  }
+    .cursor-ring::after {
+      content: '▌';
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--accent);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity .18s ease;
+    }
 
-  /* ---------- process / pricing ---------- */
-  .process-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:28px; margin:48px 0 40px; }
-  .process-step{ border-top:2px solid var(--border); padding-top:20px; }
-  .process-step .step-num{ font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--accent); display:block; margin-bottom:14px; }
-  .process-step h4{ font-size:17px; margin-bottom:10px; font-weight:600; }
-  .process-step p{ font-size:14px; color:var(--text-dim); line-height:1.6; }
-</style>
+    .cursor-ring.hover::after {
+      opacity: 1;
+    }
+
+    @media (hover:none) {
+
+      .cursor-dot,
+      .cursor-ring {
+        display: none;
+      }
+    }
+
+    body.reduced-motion .cursor-dot,
+    body.reduced-motion .cursor-ring {
+      display: none;
+    }
+
+    /* ---------- brand ---------- */
+    .brand {
+      position: fixed;
+      top: 22px;
+      left: 24px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+    }
+
+    .brand-word {
+      display: block;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: .01em;
+      line-height: 1.15;
+    }
+
+    .brand-tag {
+      display: block;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    /* ---------- theme toggle ---------- */
+    .theme-toggle {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-alt);
+      cursor: pointer;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .06em;
+      color: var(--text-dim);
+    }
+
+    .theme-toggle span.active {
+      color: var(--accent);
+    }
+
+    .theme-toggle .switch {
+      width: 32px;
+      height: 16px;
+      border-radius: 8px;
+      background: var(--border);
+      position: relative;
+    }
+
+    .theme-toggle .switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      transition: transform .3s ease;
+    }
+
+    [data-theme="blueprint"] .theme-toggle .switch::after {
+      transform: translateX(16px);
+    }
+
+    section {
+      position: relative;
+      padding: 120px 8vw;
+    }
+
+    .eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      letter-spacing: .14em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .eyebrow::before {
+      content: '//';
+      color: var(--text-dim);
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 8vw;
+      position: relative;
+    }
+
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: .55;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.6rem, 6vw, 5.2rem);
+      line-height: 1.05;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 .accent {
+      color: var(--accent);
+    }
+
+    .hero p.sub {
+      font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+      color: var(--text-dim);
+      max-width: 560px;
+      margin-bottom: 40px;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      letter-spacing: .04em;
+      padding: 16px 28px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 600;
+    }
+
+    .btn-ghost {
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .micro-trust {
+      margin-top: 20px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 40px;
+      left: 8vw;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .blink {
+      animation: blink 1s steps(1) infinite;
+      color: var(--accent);
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* ---------- trust marquee ---------- */
+    .trust-bar {
+      padding: 28px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .trust-bar .rating {
+      text-align: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 18px;
+    }
+
+    .trust-bar .rating .stars {
+      color: var(--accent);
+    }
+
+    .marquee {
+      display: flex;
+      width: 200%;
+      animation: scroll 26s linear infinite;
+    }
+
+    .marquee:hover {
+      animation-play-state: paused;
+    }
+
+    .marquee span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      color: var(--text-dim);
+      padding: 0 40px;
+      white-space: nowrap;
+    }
+
+    @keyframes scroll {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* ---------- about ---------- */
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about h2 {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      margin-bottom: 24px;
+      line-height: 1.15;
+    }
+
+    .about p {
+      color: var(--text-dim);
+      margin-bottom: 18px;
+      max-width: 520px;
+      line-height: 1.65;
+    }
+
+    .chip-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .chip {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      padding: 9px 14px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--text-dim);
+    }
+
+    .terminal-window {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      display: flex;
+      gap: 8px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot.r {
+      background: var(--diff-red);
+    }
+
+    .dot.y {
+      background: #F5C542;
+    }
+
+    .dot.g {
+      background: var(--diff-green);
+    }
+
+    .terminal-header span {
+      margin-left: auto;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .terminal-body {
+      padding: 24px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      line-height: 2;
+      color: var(--text-dim);
+    }
+
+    .terminal-body .line-num {
+      color: var(--border);
+      margin-right: 14px;
+    }
+
+    .terminal-body .val {
+      color: var(--accent);
+    }
+
+    /* ---------- case studies ---------- */
+    .case {
+      border-top: 1px solid var(--border);
+      padding-top: 80px;
+      margin-top: 80px;
+    }
+
+    .case:first-child {
+      border-top: none;
+      padding-top: 0;
+      margin-top: 48px;
+    }
+
+    .case-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .case-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .case h3 {
+      font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+      margin-top: 6px;
+      max-width: 640px;
+    }
+
+    .psr {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 40px;
+      max-width: 640px;
+    }
+
+    .psr-line {
+      display: flex;
+      gap: 14px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .psr-line .mark {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .psr-line.problem .mark {
+      color: var(--diff-red);
+    }
+
+    .psr-line.solution .mark {
+      color: var(--accent-2);
+    }
+
+    .psr-line.result .mark {
+      color: var(--diff-green);
+    }
+
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 48px;
+      max-width: 640px;
+    }
+
+    .metric {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .metric .num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .metric .num small {
+      font-size: 1rem;
+      color: var(--text-dim);
+    }
+
+    .metric .label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .ba-slider {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/8;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .ba-panel {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 32px;
+    }
+
+    .ba-before {
+      background: repeating-linear-gradient(135deg, rgba(255, 75, 110, .12) 0 2px, transparent 2px 14px), var(--bg-alt);
+    }
+
+    .ba-after {
+      background: repeating-linear-gradient(135deg, rgba(46, 230, 166, .10) 0 2px, transparent 2px 14px), var(--bg-alt);
+      clip-path: inset(0 0 0 50%);
+    }
+
+    .ba-panel .tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .1em;
+      margin-bottom: 10px;
+    }
+
+    .ba-before .tag {
+      color: var(--diff-red);
+    }
+
+    .ba-after .tag {
+      color: var(--diff-green);
+    }
+
+    .ba-panel .fake-ui {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 280px;
+    }
+
+    .fake-bar {
+      height: 10px;
+      border-radius: 4px;
+      background: var(--border);
+    }
+
+    .ba-before .fake-bar {
+      background: rgba(255, 75, 110, .25);
+    }
+
+    .ba-after .fake-bar {
+      background: rgba(46, 230, 166, .28);
+    }
+
+    .ba-handle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: var(--accent);
+      cursor: ew-resize;
+      z-index: 5;
+    }
+
+    .ba-handle::after {
+      content: '⇔';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .ba-range {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      opacity: 0;
+      cursor: ew-resize;
+      z-index: 6;
+    }
+
+    /* ---------- tech stack ---------- */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 40px;
+    }
+
+    .stack-group {
+      background: var(--bg);
+      padding: 24px;
+    }
+
+    .stack-group h4 {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 14px;
+    }
+
+    .stack-group ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .stack-group li {
+      font-size: 14px;
+      color: var(--text-dim);
+    }
+
+    /* ---------- testimonials ---------- */
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .test-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      background: var(--bg-alt);
+    }
+
+    .test-card .stars {
+      color: var(--accent);
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+
+    .test-card p {
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .test-card .who {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* ---------- process / pricing ---------- */
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px;
+      margin: 48px 0 40px;
+    }
+
+    .process-step {
+      border-top: 2px solid var(--border);
+      padding-top: 20px;
+    }
+
+    .process-step .step-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 14px;
+    }
+
+    .process-step h4 {
+      font-size: 17px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .process-step p {
+      font-size: 14px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ---------- final cta ---------- */
+    .final-cta {
+      text-align: center;
+      padding: 160px 8vw;
+    }
+
+    .final-cta h2 {
+      font-size: clamp(2rem, 4.4vw, 3.4rem);
+      max-width: 800px;
+      margin: 0 auto 20px;
+      line-height: 1.15;
+    }
+
+    .final-cta p {
+      color: var(--text-dim);
+      margin-bottom: 36px;
+    }
+
+    footer {
+      padding: 40px 8vw;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+
+    /* ---------- contact modal ---------- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 6, 10, .65);
+      backdrop-filter: blur(6px);
+      z-index: 3000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 560px;
+      max-height: 88vh;
+      overflow-y: auto;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .4);
+    }
+
+    .modal .terminal-header {
+      position: sticky;
+      top: 0;
+      background: var(--bg-alt);
+      z-index: 2;
+    }
+
+    .modal-close {
+      margin-left: auto;
+      font-size: 16px;
+      color: var(--text-dim);
+      line-height: 1;
+      padding: 4px;
+    }
+
+    .modal-close:hover {
+      color: var(--text);
+    }
+
+    .modal-body {
+      padding: 28px;
+    }
+
+    .modal-sub {
+      color: var(--text-dim);
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
+    .modal-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      padding: 10px 4px;
+      color: var(--text-dim);
+      border-bottom: 2px solid transparent;
+      margin-right: 16px;
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .tab-panel p {
+      color: var(--text-dim);
+      font-size: 14px;
+      margin-bottom: 14px;
+      line-height: 1.6;
+    }
+
+    .field {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) / 2);
+      color: var(--text);
+      padding: 12px 14px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    textarea.field {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    select.field {
+      appearance: none;
+    }
+
+    .form-status {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .form-status.success {
+      color: var(--diff-green);
+    }
+
+    .form-status.error {
+      color: var(--diff-red);
+    }
+
+    .calendly-embed {
+      min-height: 520px;
+      border-radius: calc(var(--radius) / 2);
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .calendly-embed iframe {
+      display: block;
+      background: #ffffff;
+      border-radius: calc(var(--radius) / 2);
+    }
+
+    .fallback-note {
+      border: 1px dashed var(--border);
+      border-radius: calc(var(--radius) / 2);
+      padding: 16px;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    @media (max-width: 860px) {
+      .about {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .test-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .process-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      section {
+        padding: 80px 6vw;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .brand-tag {
+        display: none;
+      }
+
+      .theme-toggle>span:not(.switch) {
+        display: none;
+      }
+
+      .process-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
+
 <body data-theme-body>
 
-<div class="cursor-dot"></div>
-<div class="cursor-ring"></div>
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
 
-<div class="brand">
-  <svg viewBox="0 0 120 120" class="brand-mark" aria-hidden="true">
-    <defs>
-      <linearGradient id="logoGrad" x1="0" y1="0" x2="120" y2="120">
-        <stop offset="0%" stop-color="#00F5D4"/>
-        <stop offset="100%" stop-color="#A855F7"/>
-      </linearGradient>
-    </defs>
-    <circle cx="60" cy="66" r="52" fill="none" stroke="url(#logoGrad)" stroke-width="2" stroke-dasharray="1 7" stroke-linecap="round" opacity="0.55"/>
-    <path d="M24,102 L24,58 A36,36 0 0 1 96,58 L96,102" fill="none" stroke="url(#logoGrad)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M40,70 L54,84 L84,48" fill="none" stroke="url(#logoGrad)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
-  <div>
-    <span class="brand-word display">Paradise</span>
-    <span class="brand-tag mono">verified builds</span>
-  </div>
-</div>
-
-<button class="theme-toggle" id="themeToggle">
-  <span id="labelTerminal" class="active">TERMINAL</span>
-  <span class="switch"></span>
-  <span id="labelBlueprint">BLUEPRINT</span>
-</button>
-
-<!-- HERO -->
-<section class="hero">
-  <canvas id="hero-canvas"></canvas>
-  <div class="hero-content">
-    <p class="eyebrow mono">FULL-STACK ENGINEER · AI PRODUCTS</p>
-    <h1 class="display">Stop losing money on <span class="accent">code that doesn't work.</span></h1>
-    <p class="sub">I turn broken apps and raw ideas into fast, stable products you can actually ship.</p>
-    <div class="cta-row">
-      <a href="#work" class="btn btn-primary">See the proof →</a>
-      <a href="#contact" class="btn btn-ghost">Book a free diagnosis</a>
+  <div class="brand">
+    <svg viewBox="0 0 120 120" class="brand-mark" aria-hidden="true">
+      <defs>
+        <linearGradient id="logoGrad" x1="0" y1="0" x2="120" y2="120">
+          <stop offset="0%" stop-color="#00F5D4" />
+          <stop offset="100%" stop-color="#A855F7" />
+        </linearGradient>
+      </defs>
+      <circle cx="60" cy="66" r="52" fill="none" stroke="url(#logoGrad)" stroke-width="2" stroke-dasharray="1 7"
+        stroke-linecap="round" opacity="0.55" />
+      <path d="M24,102 L24,58 A36,36 0 0 1 96,58 L96,102" fill="none" stroke="url(#logoGrad)" stroke-width="9"
+        stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M40,70 L54,84 L84,48" fill="none" stroke="url(#logoGrad)" stroke-width="9" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </svg>
+    <div>
+      <span class="brand-word display" id="brandName">Paradise</span>
+      <span class="brand-tag mono" id="brandTag">verified builds</span>
     </div>
-    <p class="micro-trust">Free 15-min call. No pitch — just a plan.</p>
   </div>
-  <div class="scroll-cue"><span class="blink">▌</span> scroll</div>
-</section>
 
-<!-- TRUST BAR -->
-<div class="trust-bar">
-  <p class="rating"><span class="stars">★★★★★</span> 4.9/5 average across 60+ shipped projects</p>
-  <div class="marquee mono">
-    <span>REACT</span><span>NEXT.JS</span><span>PYTHON</span><span>FASTAPI</span><span>OPENAI</span><span>LANGCHAIN</span><span>POSTGRESQL</span><span>AWS</span><span>DOCKER</span><span>TYPESCRIPT</span>
-    <span>REACT</span><span>NEXT.JS</span><span>PYTHON</span><span>FASTAPI</span><span>OPENAI</span><span>LANGCHAIN</span><span>POSTGRESQL</span><span>AWS</span><span>DOCKER</span><span>TYPESCRIPT</span>
+  <button class="theme-toggle" id="themeToggle">
+    <span id="labelTerminal" class="active">TERMINAL</span>
+    <span class="switch"></span>
+    <span id="labelBlueprint">BLUEPRINT</span>
+  </button>
+
+  <!-- HERO -->
+  <section class="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+      <p class="eyebrow mono" id="heroEyebrow"></p>
+      <h1 class="display" id="heroHeadline"></h1>
+      <p class="sub" id="heroSub"></p>
+      <div class="cta-row">
+        <a href="#work" class="btn btn-primary" id="ctaPrimary"></a>
+        <button class="btn btn-ghost js-open-contact" id="ctaSecondary"></button>
+      </div>
+      <p class="micro-trust" id="heroMicroTrust"></p>
+    </div>
+    <div class="scroll-cue"><span class="blink">▌</span> scroll</div>
+  </section>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <p class="rating" id="trustRating"></p>
+    <div class="marquee mono" id="trustMarquee"></div>
   </div>
-</div>
 
-<!-- ABOUT -->
-<section class="about" id="about">
-  <div class="reveal">
-    <p class="eyebrow">WHY CLIENTS COME BACK</p>
-    <h2 class="display">I've seen what "almost done" really looks like.</h2>
-    <p>Rage-quit MVPs. AI wrappers that hallucinate in production. Freelancers who vanished mid-sprint. I've rebuilt all of it — and I always tell you what's actually broken before you spend another dollar.</p>
-    <p>No jargon. No vanishing acts. Just a working product, and a paper trail so you always know what you're paying for.</p>
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="reveal">
+      <p class="eyebrow" id="aboutEyebrow"></p>
+      <h2 class="display" id="aboutHeadline"></h2>
+      <div id="aboutParagraphs"></div>
+      <div class="chip-row" id="aboutChips"></div>
+    </div>
+    <div class="terminal-window reveal">
+      <div class="terminal-header">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span>status.log</span>
+      </div>
+      <div class="terminal-body" id="aboutTerminal"></div>
+    </div>
+  </section>
+
+  <!-- WORK / CASE STUDIES -->
+  <section id="work">
+    <p class="eyebrow">THE PROOF</p>
+    <h2 class="display" style="font-size:clamp(1.8rem,3vw,2.6rem); max-width:640px;">Real rebuilds. Real numbers. No
+      fluff.</h2>
+    <div id="caseStudies"></div>
+  </section>
+
+  <!-- TECH STACK -->
+  <section class="reveal">
+    <p class="eyebrow">THE STACK</p>
+    <h2 class="display" style="font-size:clamp(1.8rem,3vw,2.6rem);">Built with tools that scale, not trend.</h2>
+    <div class="stack-grid" id="stackGrid"></div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="reveal" id="testimonials">
+    <p class="eyebrow">WHAT CLIENTS SAY</p>
+    <h2 class="display" style="font-size:clamp(1.8rem,3vw,2.6rem);">They hired me after someone else gave up.</h2>
+    <div class="test-grid" id="testGrid"></div>
+  </section>
+
+  <!-- PROCESS / PRICING -->
+  <section class="reveal" id="process">
+    <p class="eyebrow">HOW WE WORK</p>
+    <h2 class="display" style="font-size:clamp(1.8rem,3vw,2.6rem); max-width:640px;">You don't pay a cent until you know
+      exactly what you're getting.</h2>
+    <div class="process-grid" id="processGrid"></div>
     <div class="chip-row">
-      <span class="chip">Fixed scope, fixed price</span>
-      <span class="chip">Daily async updates</span>
-      <span class="chip">You own 100% of the code</span>
+      <span class="chip">No hourly billing</span>
+      <span class="chip">No inflated estimates</span>
+      <span class="chip">You name the number</span>
     </div>
-  </div>
-  <div class="terminal-window reveal">
-    <div class="terminal-header">
-      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-      <span>status.log</span>
-    </div>
-    <div class="terminal-body">
-      <div><span class="line-num">01</span>projects_rescued <span class="val">= 28</span></div>
-      <div><span class="line-num">02</span>avg_response_time <span class="val">= "&lt; 4h"</span></div>
-      <div><span class="line-num">03</span>client_ghosting <span class="val">= false</span></div>
-      <div><span class="line-num">04</span>code_ownership <span class="val">= "100% yours"</span></div>
-      <div><span class="line-num">05</span>status <span class="val">= "ready to build"</span></div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- WORK / CASE STUDIES -->
-<section id="work">
-  <p class="eyebrow">THE PROOF</p>
-  <h2 class="display" style="font-size:clamp(1.8rem,3vw,2.6rem); max-width:640px;">Real rebuilds. Real numbers. No fluff.</h2>
+  <!-- FINAL CTA -->
+  <section class="final-cta reveal" id="contact">
+    <p class="eyebrow" style="justify-content:center;">READY WHEN YOU ARE</p>
+    <h2 class="display">Your product is one honest conversation away from shipping.</h2>
+    <p>Free 15-minute diagnosis. I'll tell you exactly what's broken — even if you don't hire me.</p>
+    <button class="btn btn-primary js-open-contact" id="ctaFinal">Book my free diagnosis</button>
+  </section>
 
-  <div class="case reveal">
-    <div class="case-head">
-      <div>
-        <p class="case-tag mono">CASE 01 · AI CUSTOMER SUPPORT</p>
-        <h3 class="display">The bot that kept lying to customers</h3>
+  <footer>
+    <span id="footerLine1"></span>
+    <span id="footerLine2"></span>
+  </footer>
+
+  <!-- CONTACT MODAL -->
+  <div class="modal-overlay" id="contactModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="terminal-header">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span>establish_contact.sh</span>
+        <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="eyebrow" id="modalTitle">LET'S TALK</p>
+        <h3 class="display" style="font-size:1.5rem; margin-bottom:6px;">Tell me about your project.</h3>
+        <p class="modal-sub mono">I reply within 4 hours.</p>
+
+        <div class="modal-tabs">
+          <button class="tab-btn active" data-tab="call">Book a call</button>
+          <button class="tab-btn" data-tab="form">Send a note</button>
+          <button class="tab-btn" data-tab="whatsapp">WhatsApp</button>
+        </div>
+
+        <div class="tab-panel active" data-panel="call">
+          <div id="calendlyEmbed" class="calendly-embed"></div>
+          <p style="margin-top:12px;">Picks a slot on both calendars and includes a Google Meet link automatically.</p>
+        </div>
+
+        <div class="tab-panel" data-panel="form">
+          <form id="contactForm" name="contact" data-netlify="true">
+            <input type="hidden" name="form-name" value="contact">
+            <input class="field" type="text" name="name" placeholder="Your name" required>
+            <input class="field" type="email" name="email" placeholder="Your email" required>
+            <select class="field" name="projectType">
+              <option>New idea / MVP</option>
+              <option>Fixing a broken app</option>
+              <option>AI integration</option>
+              <option>Something else</option>
+            </select>
+            <textarea class="field" name="message" placeholder="What's going on with your project?" rows="4"
+              required></textarea>
+            <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Send
+              message</button>
+            <p class="form-status mono" id="formStatus"></p>
+          </form>
+        </div>
+
+        <div class="tab-panel" data-panel="whatsapp">
+          <p>Send a quick message — this opens WhatsApp with your note pre-filled:</p>
+          <textarea class="field" id="waMessage" rows="3"></textarea>
+          <a href="#" id="waLink" target="_blank" rel="noopener" class="btn btn-primary"
+            style="width:100%; justify-content:center;">Open WhatsApp →</a>
+        </div>
       </div>
     </div>
-    <div class="psr">
-      <div class="psr-line problem"><span class="mark mono">−</span><span>Support bot hallucinated pricing, forgot context every message, escalations piling up.</span></div>
-      <div class="psr-line solution"><span class="mark mono">→</span><span>Rebuilt on retrieval-grounded responses with function calling, guardrails, and human handoff.</span></div>
-      <div class="psr-line result"><span class="mark mono">+</span><span>Shipped in 3 weeks. Escalations dropped, response time under 2 seconds.</span></div>
-    </div>
-    <div class="metrics-row">
-      <div class="metric"><div class="num counter" data-target="98"><small>/100</small></div><div class="label">Page Speed</div></div>
-      <div class="metric"><div class="num counter" data-target="63">%</div><div class="label">Faster Resolution</div></div>
-      <div class="metric"><div class="num counter" data-target="41">%</div><div class="label">Support Cost Cut</div></div>
-    </div>
-    <div class="ba-slider">
-      <div class="ba-panel ba-before">
-        <p class="tag mono">− BEFORE</p>
-        <div class="fake-ui"><div class="fake-bar" style="width:90%"></div><div class="fake-bar" style="width:60%"></div><div class="fake-bar" style="width:75%"></div></div>
-      </div>
-      <div class="ba-panel ba-after" id="afterPanel1">
-        <p class="tag mono">+ AFTER</p>
-        <div class="fake-ui"><div class="fake-bar" style="width:95%"></div><div class="fake-bar" style="width:80%"></div><div class="fake-bar" style="width:88%"></div></div>
-      </div>
-      <div class="ba-handle" id="handle1" style="left:50%"></div>
-      <input type="range" class="ba-range" id="range1" min="0" max="100" value="50">
-    </div>
   </div>
 
-  <div class="case reveal">
-    <div class="case-head">
-      <div>
-        <p class="case-tag mono">CASE 02 · SAAS DASHBOARD</p>
-        <h3 class="display">The app three freelancers couldn't finish</h3>
-      </div>
-    </div>
-    <div class="psr">
-      <div class="psr-line problem"><span class="mark mono">−</span><span>18 months, three developers, still no working billing flow. Users churning weekly.</span></div>
-      <div class="psr-line solution"><span class="mark mono">→</span><span>Rebuilt the data layer, fixed race conditions, shipped Stripe billing end-to-end.</span></div>
-      <div class="psr-line result"><span class="mark mono">+</span><span>Live in 5 weeks. Churn stabilized, first paying cohort renewed at full price.</span></div>
-    </div>
-    <div class="metrics-row">
-      <div class="metric"><div class="num counter" data-target="34">%</div><div class="label">Revenue Growth</div></div>
-      <div class="metric"><div class="num counter" data-target="72">%</div><div class="label">30-Day Retention</div></div>
-      <div class="metric"><div class="num counter" data-target="6">×</div><div class="label">Faster Load Time</div></div>
-    </div>
-    <div class="ba-slider">
-      <div class="ba-panel ba-before">
-        <p class="tag mono">− BEFORE</p>
-        <div class="fake-ui"><div class="fake-bar" style="width:80%"></div><div class="fake-bar" style="width:50%"></div><div class="fake-bar" style="width:65%"></div></div>
-      </div>
-      <div class="ba-panel ba-after" id="afterPanel2">
-        <p class="tag mono">+ AFTER</p>
-        <div class="fake-ui"><div class="fake-bar" style="width:96%"></div><div class="fake-bar" style="width:84%"></div><div class="fake-bar" style="width:90%"></div></div>
-      </div>
-      <div class="ba-handle" id="handle2" style="left:50%"></div>
-      <input type="range" class="ba-range" id="range2" min="0" max="100" value="50">
-    </div>
-  </div>
-</section>
+  <script src="./config.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    (function () {
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion) { document.body.classList.add('reduced-motion'); }
+      var html = document.documentElement;
+      var DATA = null;
 
-<!-- TECH STACK -->
-<section class="reveal">
-  <p class="eyebrow">THE STACK</p>
-  <h2 class="display" style="font-size:clamp(1.8rem,3vw,2.6rem);">Built with tools that scale, not trend.</h2>
-  <div class="stack-grid">
-    <div class="stack-group"><h4>AI / LLM</h4><ul><li>OpenAI API</li><li>Anthropic Claude</li><li>LangChain</li><li>Pinecone / pgvector</li></ul></div>
-    <div class="stack-group"><h4>Backend</h4><ul><li>Node.js</li><li>Python / FastAPI</li><li>PostgreSQL</li><li>Redis</li></ul></div>
-    <div class="stack-group"><h4>Frontend</h4><ul><li>React</li><li>Next.js</li><li>TypeScript</li><li>Tailwind CSS</li></ul></div>
-    <div class="stack-group"><h4>Infra</h4><ul><li>Docker</li><li>AWS</li><li>Vercel</li><li>GitHub Actions</li></ul></div>
-  </div>
-</section>
+      // Load data from config.js (window.PORTFOLIO_CONFIG)
+      if (!window.PORTFOLIO_CONFIG) {
+        document.querySelector('.hero-content').innerHTML =
+          '<p class="eyebrow mono">SETUP NEEDED</p><h1 class="display" style="font-size:2rem;">Could not load config.js</h1>' +
+          '<p class="sub">Make sure config.js is in the same folder as index.html and is being served correctly.</p>';
+      } else {
+        DATA = window.PORTFOLIO_CONFIG;
+        render(DATA);
+        afterRender();
+      }
 
-<!-- TESTIMONIALS -->
-<section class="reveal" id="testimonials">
-  <p class="eyebrow">WHAT CLIENTS SAY</p>
-  <h2 class="display" style="font-size:clamp(1.8rem,3vw,2.6rem);">They hired me after someone else gave up.</h2>
-  <div class="test-grid">
-    <div class="test-card">
-      <p class="stars">★★★★★</p>
-      <p>"Finally, someone who told me the truth about my own code instead of just billing hours."</p>
-      <p class="who mono">— [Client Name], Founder, [Company]</p>
-    </div>
-    <div class="test-card">
-      <p class="stars">★★★★★</p>
-      <p>"Two developers before him couldn't finish it. He shipped in three weeks."</p>
-      <p class="who mono">— [Client Name], Product Lead, [Company]</p>
-    </div>
-    <div class="test-card">
-      <p class="stars">★★★★★</p>
-      <p>"Worth every dollar — I finally trust the app I'm asking customers to pay for."</p>
-      <p class="who mono">— [Client Name], CEO, [Company]</p>
-    </div>
-  </div>
-</section>
+      /* ---------- RENDER FROM JSON ---------- */
+      function render(d) {
+        document.getElementById('brandName').textContent = d.brand.name;
+        document.getElementById('brandTag').textContent = d.brand.tagline;
+        document.title = d.brand.name + ' — Full-Stack & AI Engineering Studio';
 
-<!-- PROCESS / PRICING -->
-<section class="reveal" id="process">
-  <p class="eyebrow">HOW WE WORK</p>
-  <h2 class="display" style="font-size:clamp(1.8rem,3vw,2.6rem); max-width:640px;">You don't pay a cent until you know exactly what you're getting.</h2>
-  <div class="process-grid">
-    <div class="process-step">
-      <span class="step-num mono">01 — DIAGNOSIS</span>
-      <h4>We talk it through</h4>
-      <p>I walk through your idea or your broken build with you — free, no pitch. Just an honest read on what it actually takes.</p>
-    </div>
-    <div class="process-step">
-      <span class="step-num mono">02 — ROADMAP</span>
-      <h4>Full roadmap & sprint stories</h4>
-      <p>You get a complete roadmap broken into sprints and user stories — every feature mapped, before I write a single line of code.</p>
-    </div>
-    <div class="process-step">
-      <span class="step-num mono">03 — YOUR PRICE</span>
-      <h4>You name the number</h4>
-      <p>Based on the effort laid out in the roadmap, you tell me what you're comfortable investing. Not the other way around.</p>
-    </div>
-    <div class="process-step">
-      <span class="step-num mono">04 — BUILD</span>
-      <h4>I get to work</h4>
-      <p>Development starts against the roadmap you approved — with daily updates, so you always know where your money went.</p>
-    </div>
-  </div>
-  <div class="chip-row">
-    <span class="chip">No hourly billing</span>
-    <span class="chip">No inflated estimates</span>
-    <span class="chip">You name the number</span>
-  </div>
-</section>
+        // hero
+        document.getElementById('heroEyebrow').textContent = d.hero.eyebrow;
+        document.getElementById('heroHeadline').innerHTML = d.hero.headlinePrefix + '<span class="accent">' + d.hero.headlineAccent + '</span>';
+        document.getElementById('heroSub').textContent = d.hero.sub;
+        document.getElementById('ctaPrimary').textContent = d.hero.ctaPrimary;
+        document.getElementById('ctaSecondary').textContent = d.hero.ctaSecondary;
+        document.getElementById('heroMicroTrust').textContent = d.hero.microTrust;
+        document.getElementById('ctaFinal').textContent = d.hero.ctaSecondary === '' ? 'Book my free diagnosis' : 'Book my free diagnosis';
 
-<!-- FINAL CTA -->
-<section class="final-cta reveal" id="contact">
-  <p class="eyebrow" style="justify-content:center;">READY WHEN YOU ARE</p>
-  <h2 class="display">Your product is one honest conversation away from shipping.</h2>
-  <p>Free 15-minute diagnosis. I'll tell you exactly what's broken — even if you don't hire me.</p>
-  <a href="#" class="btn btn-primary">Book my free diagnosis</a>
-</section>
+        // trust bar
+        document.getElementById('trustRating').innerHTML = '<span class="stars">★★★★★</span> ' + d.trust.rating + '/5 average across ' + d.trust.projectsLine;
+        var logos = d.trust.techLogos.concat(d.trust.techLogos).map(function (l) { return '<span>' + l + '</span>'; }).join('');
+        document.getElementById('trustMarquee').innerHTML = logos;
 
-<footer>
-  <span>© 2026 Paradise — Full-Stack & AI Engineering Studio</span>
-  <span>Upwork · GitHub · LinkedIn · [email protected]</span>
-</footer>
+        // about
+        document.getElementById('aboutEyebrow').textContent = d.about.eyebrow;
+        document.getElementById('aboutHeadline').textContent = d.about.headline;
+        document.getElementById('aboutParagraphs').innerHTML = d.about.paragraphs.map(function (p) { return '<p>' + p + '</p>'; }).join('');
+        document.getElementById('aboutChips').innerHTML = d.about.chips.map(function (c) { return '<span class="chip">' + c + '</span>'; }).join('');
+        document.getElementById('aboutTerminal').innerHTML = d.about.terminalStats.map(function (s, i) {
+          var n = String(i + 1).padStart(2, '0');
+          return '<div><span class="line-num">' + n + '</span>' + s.key + ' <span class="val">= ' + s.value + '</span></div>';
+        }).join('');
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script>
-(function(){
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduceMotion){ document.body.classList.add('reduced-motion'); }
+        // case studies
+        document.getElementById('caseStudies').innerHTML = d.caseStudies.map(function (c, i) {
+          var idx = i + 1;
+          return (
+            '<div class="case reveal">' +
+            '<div class="case-head"><div><p class="case-tag mono">' + c.tag + '</p><h3 class="display">' + c.title + '</h3></div></div>' +
+            '<div class="psr">' +
+            '<div class="psr-line problem"><span class="mark mono">−</span><span>' + c.problem + '</span></div>' +
+            '<div class="psr-line solution"><span class="mark mono">→</span><span>' + c.solution + '</span></div>' +
+            '<div class="psr-line result"><span class="mark mono">+</span><span>' + c.result + '</span></div>' +
+            '</div>' +
+            '<div class="metrics-row">' +
+            c.metrics.map(function (m) {
+              return '<div class="metric"><div class="num counter" data-target="' + m.value + '"><small>' + m.suffix + '</small></div><div class="label">' + m.label + '</div></div>';
+            }).join('') +
+            '</div>' +
+            (c.image ? '<img src="' + c.image + '" alt="' + c.title + ' case study image" class="case-img">' : '') +
+            '<div class="ba-slider">' +
+            '<div class="ba-panel ba-before"><p class="tag mono">− BEFORE</p><div class="fake-ui"><div class="fake-bar" style="width:90%"></div><div class="fake-bar" style="width:60%"></div><div class="fake-bar" style="width:75%"></div></div></div>' +
+            '<div class="ba-panel ba-after" id="afterPanel' + idx + '"><p class="tag mono">+ AFTER</p><div class="fake-ui"><div class="fake-bar" style="width:95%"></div><div class="fake-bar" style="width:80%"></div><div class="fake-bar" style="width:88%"></div></div></div>' +
+            '<div class="ba-handle" id="handle' + idx + '" style="left:50%"></div>' +
+            '<input type="range" class="ba-range" id="range' + idx + '" min="0" max="100" value="50">' +
+            '</div>' +
+            '</div>'
+          );
+        }).join('');
 
-  /* THEME TOGGLE */
-  var html = document.documentElement;
-  var toggle = document.getElementById('themeToggle');
-  var labelT = document.getElementById('labelTerminal');
-  var labelB = document.getElementById('labelBlueprint');
-  var current = 'terminal';
-  html.setAttribute('data-theme','terminal');
-  toggle.addEventListener('click', function(){
-    current = current === 'terminal' ? 'blueprint' : 'terminal';
-    html.setAttribute('data-theme', current);
-    labelT.classList.toggle('active', current==='terminal');
-    labelB.classList.toggle('active', current==='blueprint');
-  });
+        // tech stack
+        document.getElementById('stackGrid').innerHTML = d.techStack.map(function (g) {
+          return '<div class="stack-group"><h4>' + g.group + '</h4><ul>' + g.items.map(function (i) { return '<li>' + i + '</li>'; }).join('') + '</ul></div>';
+        }).join('');
 
-  /* CUSTOM CURSOR */
-  if(!reduceMotion){
-    var dot = document.querySelector('.cursor-dot');
-    var ring = document.querySelector('.cursor-ring');
-    var mx=0,my=0,rx=0,ry=0;
-    window.addEventListener('mousemove', function(e){
-      mx=e.clientX; my=e.clientY;
-      dot.style.left=mx+'px'; dot.style.top=my+'px';
-    });
-    function loop(){
-      rx += (mx-rx)*0.16; ry += (my-ry)*0.16;
-      ring.style.left=rx+'px'; ring.style.top=ry+'px';
-      requestAnimationFrame(loop);
-    }
-    loop();
-    document.querySelectorAll('a, button, .ba-handle, input[type=range]').forEach(function(el){
-      el.addEventListener('mouseenter', function(){ ring.classList.add('hover'); });
-      el.addEventListener('mouseleave', function(){ ring.classList.remove('hover'); });
-    });
-  }
+        // testimonials
+        document.getElementById('testGrid').innerHTML = d.testimonials.map(function (t) {
+          return '<div class="test-card"><p class="stars">★★★★★</p><p>"' + t.quote + '"</div>';
+        }).join('');
 
-  /* HERO CANVAS PARTICLE NETWORK */
-  var canvas = document.getElementById('hero-canvas');
-  var ctx = canvas.getContext('2d');
-  var w,h,particles=[];
-  function resize(){
-    w = canvas.width = canvas.offsetWidth;
-    h = canvas.height = canvas.offsetHeight;
-  }
-  window.addEventListener('resize', resize);
-  resize();
-  var count = Math.min(60, Math.floor(w/28));
-  for(var i=0;i<count;i++){
-    particles.push({ x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-.5)*.3, vy:(Math.random()-.5)*.3 });
-  }
-  var accentColor = getComputedStyle(html).getPropertyValue('--accent') || '#00F5D4';
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    var col = getComputedStyle(html).getPropertyValue('--accent').trim();
-    ctx.fillStyle = col; ctx.strokeStyle = col;
-    for(var i=0;i<particles.length;i++){
-      var p = particles[i];
-      p.x+=p.vx; p.y+=p.vy;
-      if(p.x<0||p.x>w) p.vx*=-1;
-      if(p.y<0||p.y>h) p.vy*=-1;
-      ctx.globalAlpha = 0.7;
-      ctx.beginPath(); ctx.arc(p.x,p.y,1.6,0,Math.PI*2); ctx.fill();
-      for(var j=i+1;j<particles.length;j++){
-        var q = particles[j];
-        var d = Math.hypot(p.x-q.x,p.y-q.y);
-        if(d<130){
-          ctx.globalAlpha = (1-d/130)*0.25;
-          ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke();
+        // process
+        document.getElementById('processGrid').innerHTML = d.process.map(function (p) {
+          return '<div class="process-step"><span class="step-num mono">' + p.num + '</span><h4>' + p.title + '</h4><p>' + p.desc + '</p></div>';
+        }).join('');
+
+        // footer
+        document.getElementById('footerLine1').textContent = '© 2026 ' + d.brand.name + ' — Full-Stack & AI Engineering Studio';
+        document.getElementById('footerLine2').innerHTML = d.contact.socialLinks.map(function (l) { return '<a href="' + l.url + '" target="_blank" rel="noopener" class="social-link">' + l.name + '</a>'; }).join(' · ') + ' · ' + d.contact.email;
+      }
+
+      /* ---------- EVERYTHING THAT NEEDS DOM CONTENT TO EXIST ---------- */
+      function afterRender() {
+        initThemeToggle();
+        initCursor();
+        initCanvas();
+        initReveals();
+        initCounters();
+        initSliders();
+        initModal();
+      }
+
+      function initThemeToggle() {
+        var toggle = document.getElementById('themeToggle');
+        var labelT = document.getElementById('labelTerminal');
+        var labelB = document.getElementById('labelBlueprint');
+        var current = 'terminal';
+        html.setAttribute('data-theme', 'terminal');
+        toggle.addEventListener('click', function () {
+          current = current === 'terminal' ? 'blueprint' : 'terminal';
+          html.setAttribute('data-theme', current);
+          labelT.classList.toggle('active', current === 'terminal');
+          labelB.classList.toggle('active', current === 'blueprint');
+        });
+      }
+
+      function initCursor() {
+        if (reduceMotion) return;
+        var dot = document.querySelector('.cursor-dot');
+        var ring = document.querySelector('.cursor-ring');
+        var mx = 0, my = 0, rx = 0, ry = 0;
+        window.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; dot.style.left = mx + 'px'; dot.style.top = my + 'px'; });
+        function loop() { rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(loop); }
+        loop();
+        function bindHovers() {
+          document.querySelectorAll('a, button, .ba-handle, input[type=range]').forEach(function (el) {
+            el.addEventListener('mouseenter', function () { ring.classList.add('hover'); });
+            el.addEventListener('mouseleave', function () { ring.classList.remove('hover'); });
+          });
+        }
+        bindHovers();
+      }
+
+      function initCanvas() {
+        var canvas = document.getElementById('hero-canvas');
+        var ctx = canvas.getContext('2d');
+        var w, h, particles = [];
+        function resize() { w = canvas.width = canvas.offsetWidth; h = canvas.height = canvas.offsetHeight; }
+        window.addEventListener('resize', resize);
+        resize();
+        var count = Math.min(60, Math.floor(w / 28));
+        for (var i = 0; i < count; i++) { particles.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3 }); }
+        function draw() {
+          ctx.clearRect(0, 0, w, h);
+          var col = getComputedStyle(html).getPropertyValue('--accent').trim();
+          ctx.fillStyle = col; ctx.strokeStyle = col;
+          for (var i = 0; i < particles.length; i++) {
+            var p = particles[i];
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0 || p.x > w) p.vx *= -1;
+            if (p.y < 0 || p.y > h) p.vy *= -1;
+            ctx.globalAlpha = 0.7;
+            ctx.beginPath(); ctx.arc(p.x, p.y, 1.6, 0, Math.PI * 2); ctx.fill();
+            for (var j = i + 1; j < particles.length; j++) {
+              var q = particles[j];
+              var dist = Math.hypot(p.x - q.x, p.y - q.y);
+              if (dist < 130) { ctx.globalAlpha = (1 - dist / 130) * 0.25; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke(); }
+            }
+          }
+          requestAnimationFrame(draw);
+        }
+        if (!reduceMotion) { draw(); }
+      }
+
+      function initReveals() {
+        if (window.gsap && window.ScrollTrigger) {
+          gsap.registerPlugin(ScrollTrigger);
+          gsap.utils.toArray('.reveal').forEach(function (el) {
+            gsap.to(el, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
+          });
+          gsap.from('.hero-content', { opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.1 });
+        } else {
+          document.querySelectorAll('.reveal').forEach(function (el) { el.style.opacity = 1; el.style.transform = 'none'; });
         }
       }
-    }
-    requestAnimationFrame(draw);
-  }
-  if(!reduceMotion){ draw(); } else { ctx.clearRect(0,0,w,h); }
 
-  /* SCROLL REVEALS */
-  if(window.gsap && window.ScrollTrigger){
-    gsap.registerPlugin(ScrollTrigger);
-    gsap.utils.toArray('.reveal').forEach(function(el){
-      gsap.to(el, {
-        opacity:1, y:0, duration:0.9, ease:'power3.out',
-        scrollTrigger:{ trigger:el, start:'top 85%' }
-      });
-    });
-    gsap.from('.hero-content', { opacity:0, y:20, duration:1, ease:'power3.out', delay:0.1 });
-  } else {
-    document.querySelectorAll('.reveal').forEach(function(el){ el.style.opacity=1; el.style.transform='none'; });
-  }
-
-  /* METRIC COUNTERS */
-  var counters = document.querySelectorAll('.counter');
-  var seen = new WeakSet();
-  var obs = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if(entry.isIntersecting && !seen.has(entry.target)){
-        seen.add(entry.target);
-        var el = entry.target;
-        var target = parseInt(el.getAttribute('data-target'),10);
-        var suffixNode = el.querySelector('small');
-        var suffix = suffixNode ? suffixNode.outerHTML : '';
-        var start = 0;
-        var dur = 1200;
-        var t0 = performance.now();
-        function step(t){
-          var p = Math.min((t-t0)/dur, 1);
-          var val = Math.floor(p*target);
-          el.innerHTML = val + suffix;
-          if(p<1) requestAnimationFrame(step);
-        }
-        requestAnimationFrame(step);
+      function initCounters() {
+        var counters = document.querySelectorAll('.counter');
+        var seen = new WeakSet();
+        var obs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting && !seen.has(entry.target)) {
+              seen.add(entry.target);
+              var el = entry.target;
+              var target = parseInt(el.getAttribute('data-target'), 10);
+              var suffixNode = el.querySelector('small');
+              var suffix = suffixNode ? suffixNode.outerHTML : '';
+              var t0 = performance.now(); var dur = 1200;
+              function step(t) {
+                var p = Math.min((t - t0) / dur, 1);
+                el.innerHTML = Math.floor(p * target) + suffix;
+                if (p < 1) requestAnimationFrame(step);
+              }
+              requestAnimationFrame(step);
+            }
+          });
+        }, { threshold: 0.4 });
+        counters.forEach(function (c) { obs.observe(c); });
       }
-    });
-  }, { threshold:0.4 });
-  counters.forEach(function(c){ obs.observe(c); });
 
-  /* BEFORE / AFTER SLIDERS */
-  function bindSlider(rangeId, afterId, handleId){
-    var range = document.getElementById(rangeId);
-    var after = document.getElementById(afterId);
-    var handle = document.getElementById(handleId);
-    range.addEventListener('input', function(){
-      var v = range.value;
-      after.style.clipPath = 'inset(0 0 0 ' + v + '%)';
-      handle.style.left = v + '%';
-    });
-  }
-  bindSlider('range1','afterPanel1','handle1');
-  bindSlider('range2','afterPanel2','handle2');
-})();
-</script>
+      function initSliders() {
+        document.querySelectorAll('.ba-slider').forEach(function (slider, i) {
+          var idx = i + 1;
+          var range = document.getElementById('range' + idx);
+          var after = document.getElementById('afterPanel' + idx);
+          var handle = document.getElementById('handle' + idx);
+          if (!range) return;
+          range.addEventListener('input', function () {
+            var v = range.value;
+            after.style.clipPath = 'inset(0 0 0 ' + v + '%)';
+            handle.style.left = v + '%';
+          });
+        });
+      }
+
+      /* ---------- CONTACT MODAL ---------- */
+      function initModal() {
+        var overlay = document.getElementById('contactModal');
+        var closeBtn = document.getElementById('modalClose');
+        var openers = document.querySelectorAll('.js-open-contact');
+        var calendlyLoaded = false;
+
+        openers.forEach(function (btn) { btn.addEventListener('click', openModal); });
+        closeBtn.addEventListener('click', closeModal);
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+        function openModal() {
+          overlay.classList.add('open');
+          overlay.setAttribute('aria-hidden', 'false');
+          if (!calendlyLoaded) { initCalendly(); calendlyLoaded = true; }
+        }
+        function closeModal() {
+          overlay.classList.remove('open');
+          overlay.setAttribute('aria-hidden', 'true');
+        }
+
+        // tabs
+        var tabBtns = document.querySelectorAll('.tab-btn');
+        var panels = document.querySelectorAll('.tab-panel');
+        tabBtns.forEach(function (b) {
+          b.addEventListener('click', function () {
+            tabBtns.forEach(function (x) { x.classList.remove('active'); });
+            panels.forEach(function (x) { x.classList.remove('active'); });
+            b.classList.add('active');
+            document.querySelector('.tab-panel[data-panel="' + b.dataset.tab + '"]').classList.add('active');
+          });
+        });
+
+        // WhatsApp
+        var waMessage = document.getElementById('waMessage');
+        var waLink = document.getElementById('waLink');
+        var wa = DATA.contact.whatsapp;
+        if (wa.number && wa.number.indexOf('REPLACE_WITH') === -1) {
+          waMessage.value = wa.prefilledMessage;
+          function updateWaLink() { waLink.href = 'https://wa.me/' + wa.number.replace(/[^0-9]/g, '') + '?text=' + encodeURIComponent(waMessage.value); }
+          waMessage.addEventListener('input', updateWaLink);
+          updateWaLink();
+        } else {
+          document.querySelector('.tab-panel[data-panel="whatsapp"]').innerHTML =
+            '<div class="fallback-note">WhatsApp isn\'t set up yet — add your number to <code>contact.whatsapp.number</code> in config.js. In the meantime, email <strong>' + DATA.contact.email + '</strong>.</div>';
+        }
+
+        // Contact form
+        var form = document.getElementById('contactForm');
+        var status = document.getElementById('formStatus');
+        var endpoint = DATA.contact.form.endpoint;
+
+        // Netlify forms — no endpoint needed when deployed on Netlify
+        if (DATA.contact.form.useNetlifyForms) {
+          // Detect local dev environment — Netlify forms only work on the deployed site
+          var isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '';
+          if (isLocalDev) {
+            status.textContent = '\u26a0\ufe0f Running locally — form submissions only work on the deployed Netlify site. Test at paraddise.netlify.app or email ' + DATA.contact.email;
+            status.className = 'form-status mono';
+            form.querySelector('button[type=submit]').addEventListener('click', function (e) {
+              e.preventDefault();
+              status.textContent = '\u26a0\ufe0f Form works on the deployed site only. Email: ' + DATA.contact.email;
+              status.className = 'form-status mono';
+            });
+          } else {
+            form.addEventListener('submit', function (e) {
+              e.preventDefault();
+              status.textContent = 'Sending\u2026'; status.className = 'form-status mono';
+              var formData = new FormData(form);
+              fetch('/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(formData).toString()
+              })
+                .then(function (r) {
+                  if (r.ok) { status.textContent = 'Sent \u2014 I\'ll reply within 4 hours.'; status.className = 'form-status mono success'; form.reset(); }
+                  else { throw new Error('bad response'); }
+                })
+                .catch(function () {
+                  status.textContent = 'Something went wrong \u2014 email me directly at ' + DATA.contact.email;
+                  status.className = 'form-status mono error';
+                });
+            });
+          }
+        } else if (endpoint && endpoint.indexOf('REPLACE_WITH') === -1) {
+          form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            status.textContent = 'Sending…'; status.className = 'form-status mono';
+            fetch(endpoint, { method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(form) })
+              .then(function (r) {
+                if (r.ok) { status.textContent = 'Sent — I\'ll reply within 4 hours.'; status.className = 'form-status mono success'; form.reset(); }
+                else { throw new Error('bad response'); }
+              })
+              .catch(function () {
+                status.textContent = 'Something went wrong — email me directly at ' + DATA.contact.email;
+                status.className = 'form-status mono error';
+              });
+          });
+        } else {
+          document.querySelector('.tab-panel[data-panel="form"]').innerHTML =
+            '<div class="fallback-note">The message form isn\'t connected yet — set <code>contact.form.useNetlifyForms = true</code> or add a Formspree endpoint in config.js. In the meantime, email <strong>' + DATA.contact.email + '</strong> directly.</div>';
+        }
+
+        // Calendly
+        function initCalendly() {
+          var container = document.getElementById('calendlyEmbed');
+          // If a Google Calendar appointment URL is provided, embed it via iframe
+          if (DATA.contact.googleCalendarUrl && DATA.contact.googleCalendarUrl.indexOf('REPLACE_WITH') === -1) {
+            container.innerHTML = '<iframe src="' + DATA.contact.googleCalendarUrl + '" style="border:0" width="100%" height="600" frameborder="0"></iframe>';
+            return;
+          }
+          // Fallback to Calendly as before
+          var url = DATA.contact.calendly.url;
+          if (!url || url.indexOf('REPLACE_WITH') !== -1) {
+            container.innerHTML = '<div class="fallback-note">Google Calendar isn\'t connected yet — add your scheduling link to <code>contact.googleCalendarUrl</code> in config.js. In the meantime, email <strong>' + DATA.contact.email + '</strong> or use the other tabs.</div>';
+            return;
+          }
+          container.innerHTML = '<div class="calendly-inline-widget" data-url="' + url + '" style="min-width:280px;height:520px;"></div>';
+          var script = document.createElement('script');
+          script.src = 'https://assets.calendly.com/assets/external/widget.js';
+          script.async = true;
+          document.body.appendChild(script);
+        }
+      }
+    })();
+  </script>
 </body>
+
 </html>

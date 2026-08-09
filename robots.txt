@@ -1,0 +1,5 @@
+# robots.txt for Paradise Studio — Freelance Web Developer Portfolio
+User-agent: *
+Allow: /
+
+Sitemap: https://paraddise.netlify.app/sitemap.xml

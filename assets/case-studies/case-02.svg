@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad2" x1="0" y1="0" x2="800" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0A0E17"/>
+      <stop offset="100%" stop-color="#151B27"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" rx="12" fill="url(#bgGrad2)" stroke="rgba(231,234,242,0.15)" stroke-width="2"/>
+  <!-- UI Header -->
+  <rect x="20" y="20" width="760" height="40" rx="8" fill="#10151F" stroke="rgba(231,234,242,0.1)"/>
+  <circle cx="44" cy="40" r="6" fill="#FF4B6E"/>
+  <circle cx="64" cy="40" r="6" fill="#F5C542"/>
+  <circle cx="84" cy="40" r="6" fill="#2EE6A6"/>
+  <text x="400" y="44" fill="#8A93A6" font-family="monospace" font-size="12" text-anchor="middle">saas-stripe-analytics-dashboard.log</text>
+
+  <!-- Metric Widgets -->
+  <rect x="40" y="80" width="220" height="100" rx="8" fill="#10151F" stroke="rgba(0,245,212,0.3)"/>
+  <text x="60" y="110" fill="#8A93A6" font-family="monospace" font-size="11">REVENUE GROWTH</text>
+  <text x="60" y="150" fill="#00F5D4" font-family="Space Grotesk, sans-serif" font-size="28" font-weight="bold">+34%</text>
+
+  <rect x="290" y="80" width="220" height="100" rx="8" fill="#10151F" stroke="rgba(168,85,247,0.3)"/>
+  <text x="310" y="110" fill="#8A93A6" font-family="monospace" font-size="11">30-DAY RETENTION</text>
+  <text x="310" y="150" fill="#A855F7" font-family="Space Grotesk, sans-serif" font-size="28" font-weight="bold">72%</text>
+
+  <rect x="540" y="80" width="220" height="100" rx="8" fill="#10151F" stroke="rgba(46,230,166,0.3)"/>
+  <text x="560" y="110" fill="#8A93A6" font-family="monospace" font-size="11">LOAD SPEED</text>
+  <text x="560" y="150" fill="#2EE6A6" font-family="Space Grotesk, sans-serif" font-size="28" font-weight="bold">6× Faster</text>
+
+  <!-- Main Chart Graphic -->
+  <rect x="40" y="205" width="720" height="210" rx="8" fill="#10151F" stroke="rgba(231,234,242,0.1)"/>
+  <path d="M70,370 L170,340 L270,350 L370,290 L470,300 L570,240 L670,230 L730,220" fill="none" stroke="#2EE6A6" stroke-width="4" stroke-linecap="round"/>
+  <path d="M70,370 L170,340 L270,350 L370,290 L470,300 L570,240 L670,230 L730,220 L730,390 L70,390 Z" fill="rgba(46,230,166,0.08)"/>
+  <text x="60" y="240" fill="#E7EAF2" font-family="monospace" font-size="13">Stripe Subscriptions End-to-End Rebuild</text>
+</svg>
