@@ -83,7 +83,8 @@ window.PORTFOLIO_CONFIG = {
         { value: "98", suffix: "/100", label: "Page Speed" },
         { value: "63", suffix: "%", label: "Faster Resolution" },
         { value: "41", suffix: "%", label: "Support Cost Cut" }
-      ]
+      ],
+      "image": "assets/case-studies/case-01.svg"
     },
     {
       id: "case-02",
@@ -100,7 +101,8 @@ window.PORTFOLIO_CONFIG = {
         { value: "34", suffix: "%", label: "Revenue Growth" },
         { value: "72", suffix: "%", label: "30-Day Retention" },
         { value: "6", suffix: "×", label: "Faster Load Time" }
-      ]
+      ],
+      "image": "assets/case-studies/case-02.svg"
     },
     {
       id: "case-03",
@@ -117,7 +119,8 @@ window.PORTFOLIO_CONFIG = {
         { value: "50", suffix: "%+", label: "Cloud Cost Cut" },
         { value: "100K", suffix: "", label: "Alerts Sent in <3 Min" },
         { value: "10+", suffix: "", label: "Core Modules Modernized" }
-      ]
+      ],
+      "image": "assets/case-studies/case-03.svg"
     }
   ],
 
@@ -132,10 +135,10 @@ window.PORTFOLIO_CONFIG = {
 
   // Client Testimonials
   testimonials: [
-    { quote: "Finally, a freelance web developer who told me the truth about my own code instead of just billing hours.", name: "[Client Name]", role: "Founder", company: "[Company]" },
-    { quote: "Two developers before him couldn't finish it. He shipped our AI integration in three weeks.", name: "[Client Name]", role: "Product Lead", company: "[Company]" },
-    { quote: "Worth every dollar — our web application load times improved 6x and churn dropped immediately.", name: "[Client Name]", role: "CEO", company: "[Company]" },
-    { quote: "He rebuilt our entire cloud setup and cut our monthly bill in half — without a single day of downtime for our schools.", name: "[Client Name]", role: "CTO", company: "[Company]" }
+    { quote: "Finally, a freelance web developer who told me the truth about my own code instead of just billing hours." },
+    { quote: "Two developers before him couldn't finish it. He shipped our AI integration in three weeks." },
+    { quote: "Worth every dollar — our web application load times improved 6x and churn dropped immediately." },
+    { quote: "He rebuilt our entire cloud setup and cut our monthly bill in half — without a single day of downtime for our schools." }
   ],
 
   // Process & Pricing Philosophy
@@ -154,8 +157,8 @@ window.PORTFOLIO_CONFIG = {
     // Social links displayed in the footer — replace URLs with your real profiles
     socialLinks: [
       { name: "LinkedIn", url: "https://linkedin.com/in/yourprofile" },
-      { name: "GitHub",   url: "https://github.com/yourprofile" },
-      { name: "Upwork",   url: "https://upwork.com/freelancers/yourprofile" }
+      { name: "GitHub", url: "https://github.com/yourprofile" },
+      { name: "Upwork", url: "https://upwork.com/freelancers/yourprofile" }
     ],
 
     // WhatsApp configuration
